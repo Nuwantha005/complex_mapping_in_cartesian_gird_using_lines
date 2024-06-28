@@ -18,6 +18,7 @@ $f(z) = 3z^3$ can be written as Complex w = z.times(3).power(3);
 
 
 ### 2) $f(z) = 3z^3$
+![ezgif-5-996c4e2bec](https://github.com/Nuwantha005/complex_mapping_in_cartesian_gird_using_lines/assets/132461834/42a61822-8543-4d9b-ada3-30f29327e036)
 
 
 ## Controls
