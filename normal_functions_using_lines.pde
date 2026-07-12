@@ -36,9 +36,16 @@ void setup() {
     }
     grid.add(col);
   }
+  
+  // Populate colorList once to prevent infinite growth during draw()
+  colorList.clear();
+  for (ArrayList<PVector> column : grid) {
+    float col = map(column.get(0).x, -xedge, xedge, 0, 255);
+    colorList.append(col);
+  }
+  
   image = mapping(grid);
   animation = generateFrame(grid, image);
- 
 }
 
 void draw() {
@@ -46,19 +53,17 @@ void draw() {
   strokeWeight(2);
   noFill();
   if (status == GRID_DISPLAY) {
-    for(ArrayList<PVector> column:grid){
-      float col = map(column.get(0).x,-xedge,xedge,0,255);
-      colorList.append(col);
-      stroke(col, 255, 255);
+    for (int i = 0; i < grid.size(); ++i) {
+      stroke(getColor(i), 255, 255);
       beginShape();
-      for(PVector v:column){
+      for (PVector v : grid.get(i)) {
         vertex(v.x, v.y);
       }
       endShape();
     }
 
     for (int i = 0; i < grid.get(0).size(); ++i) {
-      stroke(colorList.get(i), 255, 255);
+      stroke(getColor(i), 255, 255);
       beginShape();
       for (int j = 0; j < grid.size(); ++j) {
         PVector v = grid.get(j).get(i);
@@ -69,7 +74,7 @@ void draw() {
   } else if (status == IMG_DISPLAY) {
     for (int i = 0; i < image.size(); ++i) {
       ArrayList<PVector> column = image.get(i);
-      stroke(colorList.get(i), 255, 255);
+      stroke(getColor(i), 255, 255);
       beginShape();
       for(PVector v:column){
         vertex(v.x, v.y);
@@ -77,7 +82,7 @@ void draw() {
       endShape();
     }
     for (int i = 0; i < image.get(0).size(); ++i) {
-      stroke(colorList.get(i), 255, 255);
+      stroke(getColor(i), 255, 255);
       beginShape();
       for (int j = 0; j < image.size(); ++j) {
         PVector v = image.get(j).get(i);
@@ -88,7 +93,7 @@ void draw() {
   } else if (status == ANIMATION_DISPLAY){
     for (int i = 0; i < animation.size(); ++i) {
       ArrayList<ArrayList<PVector>> column = animation.get(i);
-      stroke(colorList.get(i), 255, 255);
+      stroke(getColor(i), 255, 255);
       beginShape();
       for (int j = 0; j < column.size(); ++j) {
         ArrayList<PVector> list = column.get(j);
@@ -98,7 +103,7 @@ void draw() {
       endShape();
     }
     for (int i = 0; i < animation.get(0).size(); ++i) {
-      stroke(colorList.get(i), 255, 255);
+      stroke(getColor(i), 255, 255);
       beginShape();
       for (int j = 0; j < animation.size(); ++j) {
         PVector v = animation.get(j).get(i).get(currentFrame);
@@ -113,7 +118,7 @@ void draw() {
   } else if (status == REVERSE_ANIMATION_DISPLAY){
     for (int i = 0; i < animation.size(); ++i) {
       ArrayList<ArrayList<PVector>> column = animation.get(i);
-      stroke(colorList.get(i), 255, 255);
+      stroke(getColor(i), 255, 255);
       beginShape();
       for (int j = 0; j < column.size(); ++j) {
         ArrayList<PVector> list = column.get(j);
@@ -123,7 +128,7 @@ void draw() {
       endShape();
     }
     for (int i = 0; i < animation.get(0).size(); ++i) {
-      stroke(colorList.get(i), 255, 255);
+      stroke(getColor(i), 255, 255);
       beginShape();
       for (int j = 0; j < animation.size(); ++j) {
         PVector v = animation.get(j).get(i).get(currentFrame);
@@ -144,4 +149,9 @@ void mouseClicked() {
   } else if(status == IMG_DISPLAY){
     status = REVERSE_ANIMATION_DISPLAY;
   }
+}
+
+float getColor(int i) {
+  if (colorList.size() == 0) return 0;
+  return colorList.get(i % colorList.size());
 }
